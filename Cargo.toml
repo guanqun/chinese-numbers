@@ -3,5 +3,6 @@ name = "chinese-numbers"
 version = "1.0.0"
 authors = ["Guanqun Lu <guanqun.lu@gmail.com>"]
 license = "MIT"
+description = "Convert i64 to a readable Chinese format"
 
 [dependencies]
