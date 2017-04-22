@@ -57,7 +57,7 @@ pub fn convert_all_fmt(val: i64) -> String
     let val = i64::abs(val);
 
     let mut max_index : i8 = 0;
-    let mut temp = val / 1000;
+    let mut temp = val / 10000;
     while temp > 0 {
         max_index += 1;
         temp /= 10000;
@@ -148,6 +148,12 @@ mod tests {
         assert_eq!(convert_all_fmt(111), "一百十一");
         assert_eq!(convert_all_fmt(101), "一百零一");
         assert_eq!(convert_all_fmt(100), "一百");
+        assert_eq!(convert_all_fmt(2000), "二千");
+        assert_eq!(convert_all_fmt(20000), "二万");
+        assert_eq!(convert_all_fmt(200000), "二十万");
+        assert_eq!(convert_all_fmt(20000000), "二千万");
+        assert_eq!(convert_all_fmt(200000000), "二亿");
+        assert_eq!(convert_all_fmt(2000000000), "二十亿");
         assert_eq!(convert_all_fmt(12345), "一万二千三百四十五");
         assert_eq!(convert_all_fmt(10345), "一万零三百四十五");
         assert_eq!(convert_all_fmt(10045), "一万零四十五");
