@@ -1,6 +1,7 @@
 [package]
 name = "chinese-numbers"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Guanqun Lu <guanqun.lu@gmail.com>"]
+license = "MIT"
 
 [dependencies]
