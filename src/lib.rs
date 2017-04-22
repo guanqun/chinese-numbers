@@ -42,6 +42,16 @@ fn digit_str(n : i64) -> &'static str
     }
 }
 
+fn get_max_unit_index(val: i64) -> i8 {
+    let mut max_index : i8 = 0;
+    let mut temp = val / 10000;
+    while temp > 0 {
+        max_index += 1;
+        temp /= 10000;
+    }
+    return max_index;
+}
+
 pub fn convert_all_fmt(val: i64) -> String
 {
     if val == 0 {
@@ -56,16 +66,10 @@ pub fn convert_all_fmt(val: i64) -> String
     }
     let val = i64::abs(val);
 
-    let mut max_index : i8 = 0;
-    let mut temp = val / 10000;
-    while temp > 0 {
-        max_index += 1;
-        temp /= 10000;
-    }
-
+    let mut max_index = get_max_unit_index(val);
     let units : [&str; 5] = ["", "万", "亿", "兆", "京"];
 
-    temp = val;
+    let mut temp = val;
     let mut need_zero = ZeroFlag::new();
     while temp > 0 {
         let base = i64::pow(10000, max_index as u32);
@@ -140,6 +144,28 @@ mod tests {
     use super::*;
     #[test]
     fn it_works() {
+        assert_eq!(get_max_unit_index(0), 0);
+        assert_eq!(get_max_unit_index(1), 0);
+        assert_eq!(get_max_unit_index(10), 0);
+        assert_eq!(get_max_unit_index(100), 0);
+        assert_eq!(get_max_unit_index(1000), 0);
+        assert_eq!(get_max_unit_index(10000), 1);
+        assert_eq!(get_max_unit_index(100000), 1);
+        assert_eq!(get_max_unit_index(1000000), 1);
+        assert_eq!(get_max_unit_index(10000000), 1);
+        assert_eq!(get_max_unit_index(100000000), 2);
+        assert_eq!(get_max_unit_index(1000000000), 2);
+        assert_eq!(get_max_unit_index(10000000000), 2);
+        assert_eq!(get_max_unit_index(100000000000), 2);
+        assert_eq!(get_max_unit_index(1000000000000), 3);
+        assert_eq!(get_max_unit_index(10000000000000), 3);
+        assert_eq!(get_max_unit_index(100000000000000), 3);
+        assert_eq!(get_max_unit_index(1000000000000000), 3);
+        assert_eq!(get_max_unit_index(10000000000000000), 4);
+        assert_eq!(get_max_unit_index(100000000000000000), 4);
+        assert_eq!(get_max_unit_index(1000000000000000000), 4);
+        assert_eq!(get_max_unit_index(9223372036854775807), 4);
+
         assert_eq!(convert_all_fmt(0), "零");
         assert_eq!(convert_all_fmt(1), "一");
         assert_eq!(convert_all_fmt(9), "九");
