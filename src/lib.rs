@@ -1,3 +1,6 @@
+use std::fmt::{self, Display, Formatter};
+
+pub struct Fmt(pub i64);
 
 #[derive(Debug)]
 struct ZeroFlag {
@@ -52,91 +55,94 @@ fn get_max_unit_index(val: i64) -> i8 {
     return max_index;
 }
 
-pub fn convert_all_fmt(val: i64) -> String
-{
-    if val == 0 {
-        return "零".to_owned();
+impl Display for Fmt {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        if self.0 == 0 {
+            return f.write_str("零");
+        }
+
+        // check negative
+        if self.0 < 0 {
+            f.write_str("负")?;
+        }
+        let val = i64::abs(self.0);
+
+        let mut max_index = get_max_unit_index(val);
+        let units : [&str; 5] = ["", "万", "亿", "兆", "京"];
+
+        let mut temp = val;
+        let mut need_zero = ZeroFlag::new();
+        while temp > 0 {
+            let base = i64::pow(10000, max_index as u32);
+            let mut part = temp / base;
+            let not_empty : bool = part != 0;
+
+            // part should be less than 1000.
+            if part >= 1000 {
+                if need_zero.should_output() {
+                    f.write_str("零")?;
+                }
+                need_zero.did_output_some_character();
+
+                f.write_str(digit_str(part/1000))?;
+                f.write_str("千")?;
+                part %= 1000;
+            } else {
+                need_zero.reset();
+            }
+
+            if part >= 100 {
+                if need_zero.should_output() {
+                    f.write_str("零")?;
+                }
+                need_zero.did_output_some_character();
+
+                f.write_str(digit_str(part/100))?;
+                f.write_str("百")?;
+                part %= 100;
+            } else {
+                need_zero.reset();
+            }
+
+            if part >= 10 {
+                if need_zero.should_output() {
+                    f.write_str("零")?;
+                }
+                need_zero.did_output_some_character();
+
+                if part >= 20 {
+                    f.write_str(digit_str(part/10))?;
+                }
+                f.write_str("十")?;
+                part %= 10;
+            } else {
+                need_zero.reset();
+            }
+            if part > 0 {
+                if need_zero.should_output() {
+                    f.write_str("零")?;
+                }
+                need_zero.did_output_some_character();
+
+                f.write_str(digit_str(part))?;
+            } else {
+                need_zero.reset();
+            }
+
+            if not_empty {
+                f.write_str(units[max_index as usize])?;
+            }
+
+            max_index -= 1;
+            temp %= base;
+        }
+
+        Ok(())
     }
+}
 
-    let mut result = String::new();
-
-    // check negative
-    if val < 0 {
-        result.push_str("负");
-    }
-    let val = i64::abs(val);
-
-    let mut max_index = get_max_unit_index(val);
-    let units : [&str; 5] = ["", "万", "亿", "兆", "京"];
-
-    let mut temp = val;
-    let mut need_zero = ZeroFlag::new();
-    while temp > 0 {
-        let base = i64::pow(10000, max_index as u32);
-        let mut part = temp / base;
-        let not_empty : bool = part != 0;
-
-        // part should be less than 1000.
-        if part >= 1000 {
-            if need_zero.should_output() {
-                result.push_str("零");
-            }
-            need_zero.did_output_some_character();
-
-            result.push_str(digit_str(part/1000));
-            result.push_str("千");
-            part %= 1000;
-        } else {
-            need_zero.reset();
-        }
-
-        if part >= 100 {
-            if need_zero.should_output() {
-                result.push_str("零");
-            }
-            need_zero.did_output_some_character();
-
-            result.push_str(digit_str(part/100));
-            result.push_str("百");
-            part %= 100;
-        } else {
-            need_zero.reset();
-        }
-
-        if part >= 10 {
-            if need_zero.should_output() {
-                result.push_str("零");
-            }
-            need_zero.did_output_some_character();
-
-            if part >= 20 {
-                result.push_str(digit_str(part/10));
-            }
-            result.push_str("十");
-            part %= 10;
-        } else {
-            need_zero.reset();
-        }
-        if part > 0 {
-            if need_zero.should_output() {
-                result.push_str("零");
-            }
-            need_zero.did_output_some_character();
-
-            result.push_str(digit_str(part));
-        } else {
-            need_zero.reset();
-        }
-
-        if not_empty {
-            result.push_str(units[max_index as usize]);
-        }
-
-        max_index -= 1;
-        temp %= base;
-    }
-
-    return result
+pub fn convert_all_fmt(val: i64) -> String {
+    Fmt(val).to_string()
 }
 
 #[cfg(test)]
