@@ -1,6 +1,6 @@
 [package]
 name = "chinese-numbers"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["Guanqun Lu <guanqun.lu@gmail.com>"]
 license = "MIT"
 description = "Convert i64 to a readable Chinese format. e.g. 12345 is converted to 一万二千三百四十五"
