@@ -155,5 +155,21 @@ mod tests {
         assert_eq!(convert_all_fmt(10000), "一万");
         assert_eq!(convert_all_fmt(100450), "十万零四百五十");
         assert_eq!(convert_all_fmt(9223372036854775807), "九百二十二京三千三百七十二兆零三百六十八亿五千四百七十七万五千八百零七");
+
+        assert_eq!(convert_all_fmt(0), "零");
+        assert_eq!(convert_all_fmt(-1), "负一");
+        assert_eq!(convert_all_fmt(-9), "负九");
+        assert_eq!(convert_all_fmt(-10), "负十");
+        assert_eq!(convert_all_fmt(-11), "负十一");
+        assert_eq!(convert_all_fmt(-111), "负一百十一");
+        assert_eq!(convert_all_fmt(-101), "负一百零一");
+        assert_eq!(convert_all_fmt(-100), "负一百");
+        assert_eq!(convert_all_fmt(-12345), "负一万二千三百四十五");
+        assert_eq!(convert_all_fmt(-10345), "负一万零三百四十五");
+        assert_eq!(convert_all_fmt(-10045), "负一万零四十五");
+        assert_eq!(convert_all_fmt(-10005), "负一万零五");
+        assert_eq!(convert_all_fmt(-10000), "负一万");
+        assert_eq!(convert_all_fmt(-100450), "负十万零四百五十");
+        assert_eq!(convert_all_fmt(-9223372036854775807), "负九百二十二京三千三百七十二兆零三百六十八亿五千四百七十七万五千八百零七");
     }
 }
