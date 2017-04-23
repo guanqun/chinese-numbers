@@ -209,5 +209,8 @@ mod tests {
         assert_eq!(convert_all_fmt(-10000), "负一万");
         assert_eq!(convert_all_fmt(-100450), "负十万零四百五十");
         assert_eq!(convert_all_fmt(-9223372036854775807), "负九百二十二京三千三百七十二兆零三百六十八亿五千四百七十七万五千八百零七");
+
+        let fmt = Fmt(1000);
+        assert_eq!(format!("{}元", fmt), "一千元");
     }
 }
